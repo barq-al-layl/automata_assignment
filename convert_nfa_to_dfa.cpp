@@ -155,9 +155,17 @@ public:
                     for (const string& s: transitions[make_pair(state, ch)]) {
                         tNextState += s;
                     }
-                    if (!tNextState.empty()) continue;
+                    if (tNextState.empty()) continue;
                     tKey = make_pair(value, ch);
+                    dfaStates.insert(value);
                     dfaTransitions[tKey] = tNextState;
+                }
+            }
+        }
+        for (const string& fs: finalStates) {
+            for (const string& state: dfaStates) {
+                if (state.find(fs) != string::npos) {
+                    dfaFinalStates.insert(state);
                 }
             }
         }
@@ -175,7 +183,7 @@ int main() {
     dfa.showQuintuple();
     string w;
     cout << "Enter w: ";
-//    getline(cin, w);
+    getline(cin, w);
     if (dfa.isAccepted(w)) {
         cout << "Accepted, path:\n";
         dfa.showPath();
